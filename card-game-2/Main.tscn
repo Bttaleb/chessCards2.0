@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://dmapo3bhoks56"]
+
+[ext_resource type="Script" uid="uid://cxefxabf17agb" path="res://Script/CardManager.gd" id="1_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://07b6m3qq3pem" path="res://Scenes/CardSlot.tscn" id="3_r0du0"]
+[ext_resource type="Script" uid="uid://c08kp0tane32e" path="res://Script/CardSlot.gd" id="4_cm0pq"]
+[ext_resource type="Script" uid="uid://cwjwoun4ybmj7" path="res://Script/PlayerHand.gd" id="4_fos0i"]
+[ext_resource type="Script" uid="uid://nhcsvgmtaf88" path="res://Deck.gd" id="5_lgr22"]
+[ext_resource type="Texture2D" uid="uid://b1chve81v6egd" path="res://Assets/Deck.png" id="6_trn2v"]
+[ext_resource type="Script" uid="uid://bug8kf55h51xh" path="res://InputManager.gd" id="7_03owx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cm0pq"]
+size = Vector2(179, 265)
+
+[node name="Main" type="Node2D"]
+
+[node name="CardManager" type="Node2D" parent="."]
+script = ExtResource("1_uu6xs")
+
+[node name="CardSlot" parent="." instance=ExtResource("3_r0du0")]
+position = Vector2(826, 409)
+scale = Vector2(0.45, 0.45)
+script = ExtResource("4_cm0pq")
+
+[node name="CardSlot2" parent="." instance=ExtResource("3_r0du0")]
+position = Vector2(11, 349)
+scale = Vector2(0.45, 0.45)
+script = ExtResource("4_cm0pq")
+
+[node name="PlayerHand" type="Node2D" parent="."]
+script = ExtResource("4_fos0i")
+
+[node name="Deck" type="Node2D" parent="."]
+position = Vector2(150, 890)
+script = ExtResource("5_lgr22")
+
+[node name="Sprite2D" type="Sprite2D" parent="Deck"]
+z_index = -2
+position = Vector2(-0.5, -0.25)
+scale = Vector2(0.99444443, 1.0018868)
+texture = ExtResource("6_trn2v")
+
+[node name="Area2D" type="Area2D" parent="Deck"]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Deck/Area2D"]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_cm0pq")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Deck"]
+modulate = Color(0, 0, 0, 1)
+z_index = -2
+offset_left = -9.0
+offset_top = -28.0
+offset_right = 31.0
+offset_bottom = 12.0
+scale = Vector2(2, 2)
+text = "0"
+
+[node name="InputManager" type="Node2D" parent="."]
+script = ExtResource("7_03owx")

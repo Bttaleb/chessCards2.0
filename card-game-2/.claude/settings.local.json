@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f in /Users/basseltaleb/Desktop/GitHub/chessCards2.0/card-game-2/Assets/wholecards/*.png:*)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(python3:*)",
+      "Bash(done)",
+      "Bash(sips:*)"
+    ]
+  }
+}

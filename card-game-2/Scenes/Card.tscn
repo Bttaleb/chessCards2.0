@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://ctu1vrmfkd066"]
+
+[ext_resource type="Texture2D" uid="uid://cmsdog81cuwoe" path="res://Assets/wholecards/QueenCard.png" id="1_dd2wi"]
+[ext_resource type="Script" uid="uid://vhemeasdy17g" path="res://Script/Card.gd" id="1_hael8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hael8"]
+size = Vector2(359, 503)
+
+[sub_resource type="Animation" id="Animation_3m7nw"]
+resource_name = "card_flip"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kphy1"]
+_data = {
+&"card_flip": SubResource("Animation_3m7nw")
+}
+
+[node name="Card" type="Node2D" unique_id=1114137429]
+position = Vector2(50, 890)
+script = ExtResource("1_hael8")
+
+[node name="CardBackImage" type="Sprite2D" parent="." unique_id=996816594]
+
+[node name="CardImage" type="Sprite2D" parent="." unique_id=1793005530]
+z_index = -1
+texture = ExtResource("1_dd2wi")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1458318699]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1860595347]
+position = Vector2(-0.5, 0.5)
+shape = SubResource("RectangleShape2D_hael8")
+
+[node name="Attack" type="RichTextLabel" parent="." unique_id=870216031]
+modulate = Color(0, 0, 0, 1)
+offset_left = -86.0
+offset_top = 212.0
+offset_right = -46.0
+offset_bottom = 252.0
+scale = Vector2(2, 2)
+text = "0"
+
+[node name="Health" type="RichTextLabel" parent="." unique_id=399719798]
+modulate = Color(0, 0, 0, 1)
+offset_left = 48.0
+offset_top = 211.0
+offset_right = 88.0
+offset_bottom = 251.0
+scale = Vector2(2, 2)
+text = "0"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=97145742]
+libraries/ = SubResource("AnimationLibrary_kphy1")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
