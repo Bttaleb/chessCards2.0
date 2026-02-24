@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Chicken Nuggets — Renaissance Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700;800;900&family=IM+Fell+English+SC&family=IM+Fell+DW+Pica:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   RENAISSANCE DESIGN TOKENS
+   ═══════════════════════════════════════════════ */
+:root {
+  --gold-primary: #c9a84c;
+  --gold-light: #f1c86d;
+  --gold-bright: #ffee00;
+  --gold-dark: #8b7025;
+  --gold-deep: #6b5520;
+  --parchment: #f0e6c8;
+  --parchment-mid: #e4d5ab;
+  --parchment-dark: #d4c49a;
+  --crimson: #8b1a1a;
+  --crimson-light: #c0392b;
+  --deep-red: #5c0e0e;
+  --dark-green: #2d4a2d;
+  --rich-brown: #3e2723;
+  --dark-bg: #1a1410;
+  --navy-deck: #2d3142;
+  --royal-purple: #4a1a6b;
+
+  --font-display: 'Cinzel Decorative', 'Georgia', serif;
+  --font-body: 'Cinzel', 'Georgia', serif;
+  --font-fell: 'IM Fell DW Pica', 'Georgia', serif;
+  --font-fell-sc: 'IM Fell English SC', 'Georgia', serif;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--dark-bg);
+  color: var(--parchment);
+  font-family: var(--font-body);
+}
+
+/* ═══════════════════════════════════════════════
+   PARCHMENT TEXTURE MIXIN
+   ═══════════════════════════════════════════════ */
+.parchment-bg {
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(139,119,75,0.04) 1px, transparent 3px),
+    repeating-linear-gradient(90deg, transparent, rgba(139,119,75,0.03) 2px, transparent 5px),
+    repeating-linear-gradient(45deg, transparent, rgba(160,140,90,0.02) 1px, transparent 4px),
+    linear-gradient(160deg, #f0e6c8 0%, #e8dbb5 30%, #ede2c4 60%, #f0e6c8 100%);
+}
+
+/* ═══════════════════════════════════════════════
+   ORNATE FRAME MIXIN
+   ═══════════════════════════════════════════════ */
+.renaissance-frame {
+  border: 3px solid var(--gold-primary);
+  box-shadow:
+    inset 0 0 0 1px var(--dark-bg),
+    inset 0 0 0 3px var(--gold-dark),
+    inset 0 0 15px rgba(201,168,76,0.08),
+    0 0 0 1px var(--dark-bg),
+    0 0 0 3px var(--gold-dark),
+    0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION BAR
+   ═══════════════════════════════════════════════ */
+.nav-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: 56px;
+  background:
+    linear-gradient(180deg, rgba(30,22,14,0.97) 0%, rgba(20,15,10,0.99) 100%);
+  border-bottom: 2px solid var(--gold-dark);
+  box-shadow:
+    0 1px 0 var(--gold-primary),
+    0 4px 24px rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.nav-bar::before, .nav-bar::after {
+  content: '◆';
+  color: var(--gold-primary);
+  font-size: 10px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+.nav-bar::before { left: 20px; }
+.nav-bar::after { right: 20px; }
+
+.nav-title {
+  display: none;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  color: var(--parchment-dark);
+  font-family: var(--font-fell-sc);
+  font-size: 13px;
+  letter-spacing: 2px;
+  padding: 16px 28px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.nav-tab:hover { color: var(--gold-light); }
+
+.nav-tab.active {
+  color: var(--gold-bright);
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20%; right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+}
+
+.nav-tab::before {
+  content: '';
+  position: absolute;
+  inset: 8px 4px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: border-color 0.3s ease;
+}
+.nav-tab:hover::before {
+  border-color: rgba(201,168,76,0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   SCREENS CONTAINER
+   ═══════════════════════════════════════════════ */
+.screen {
+  position: fixed;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  display: none;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+
+/* ═══════════════════════════════════════════════
+   SCREEN 1: GAME BOARD
+   ═══════════════════════════════════════════════ */
+.game-board {
+  width: 100%; height: 100%;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(62,39,35,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(45,74,45,0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 20%, rgba(139,26,26,0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #1a1410 0%, #211a12 40%, #1e1610 70%, #141010 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Vignette overlay */
+.game-board::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Canvas texture overlay */
+.game-board::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(255,255,255,0.008) 1px, transparent 2px),
+    repeating-linear-gradient(90deg, transparent, rgba(255,255,255,0.006) 1px, transparent 2px);
+  pointer-events: none;
+  z-index: 51;
+}
+
+/* --- Top Bar (Health Bars) --- */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player-info.right { flex-direction: row-reverse; }
+
+.player-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+
+.health-bar-outer {
+  width: 280px;
+  height: 28px;
+  border: 2px solid var(--gold-primary);
+  border-radius: 3px;
+  background: rgba(10,8,6,0.8);
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px var(--gold-dark),
+    inset 0 2px 6px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,0,0,0.5),
+    0 2px 8px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.health-bar-fill {
+  height: 100%;
+  width: 75%;
+  background: linear-gradient(180deg, #c0392b 0%, #8b1a1a 40%, #6b1515 100%);
+  border-radius: 1px;
+  position: relative;
+  transition: width 0.8s ease;
+}
+
+.health-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
+  border-radius: 1px 1px 0 0;
+}
+
+.health-bar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--parchment);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  letter-spacing: 2px;
+}
+
+/* Ornamental divider */
+.board-divider {
+  width: 60%;
+  margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), var(--gold-primary), var(--gold-dark), transparent);
+  opacity: 0.4;
+  position: relative;
+  z-index: 10;
+}
+
+/* --- Battlefield (Card Slots) --- */
+.battlefield {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  position: relative;
+  z-index: 10;
+  padding-bottom: 20px;
+}
+
+.card-slot {
+  width: 150px;
+  height: 222px;
+  border: 2px dashed var(--gold-dark);
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(139,119,75,0.03) 1px, transparent 3px),
+    linear-gradient(135deg, rgba(240,230,200,0.06) 0%, rgba(228,213,171,0.04) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-slot:hover {
+  border-color: var(--gold-primary);
+  box-shadow: inset 0 0 20px rgba(201,168,76,0.08), 0 0 15px rgba(201,168,76,0.1);
+}
+
+.card-slot .slot-icon {
+  font-size: 32px;
+  color: var(--gold-dark);
+  opacity: 0.25;
+  margin-bottom: 8px;
+}
+
+.card-slot .slot-label {
+  font-family: var(--font-fell-sc);
+  font-size: 11px;
+  color: var(--gold-dark);
+  opacity: 0.35;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.slot-multiplier {
+  position: absolute;
+  bottom: -24px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--gold-dark);
+  opacity: 0.5;
+  letter-spacing: 1px;
+}
+
+/* --- Bottom Area (Hand + Deck) --- */
+.bottom-area {
+  display: flex;
+  align-items: flex-end;
+  padding: 0 48px 28px;
+  position: relative;
+  z-index: 10;
+}
+
+.deck-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-right: 40px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.deck-stack {
+  position: relative;
+  width: 120px;
+  height: 178px;
+}
+
+.deck-card-shadow {
+  position: absolute;
+  width: 120px; height: 178px;
+  border-radius: 6px;
+  background: var(--navy-deck);
+  border: 2px solid var(--gold-dark);
+}
+.deck-card-shadow:nth-child(1) { top: 4px; left: 4px; opacity: 0.4; }
+.deck-card-shadow:nth-child(2) { top: 2px; left: 2px; opacity: 0.6; }
+
+.deck-top {
+  position: absolute;
+  top: 0; left: 0;
+  width: 120px; height: 178px;
+  border-radius: 6px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.1) 0%, transparent 70%),
+    linear-gradient(135deg, #2d3142 0%, #23273a 50%, #2d3142 100%);
+  border: 2px solid var(--gold-primary);
+  box-shadow:
+    inset 0 0 0 1px var(--gold-dark),
+    inset 0 0 20px rgba(0,0,0,0.3),
+    0 4px 16px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.deck-area:hover .deck-top {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 0 0 1px var(--gold-dark),
+    inset 0 0 20px rgba(0,0,0,0.3),
+    0 8px 24px rgba(0,0,0,0.6),
+    0 0 20px rgba(201,168,76,0.15);
+}
+
+.deck-emblem {
+  width: 60px; height: 60px;
+  opacity: 0.6;
+}
+
+.deck-count {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--gold-dark);
+  letter-spacing: 2px;
+}
+
+/* --- Player Hand --- */
+.player-hand {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0;
+  padding-bottom: 10px;
+}
+
+.hand-card-wrapper {
+  transition: transform 0.3s ease, z-index 0s;
+  cursor: pointer;
+}
+
+.hand-card-wrapper:nth-child(1) { transform: rotate(-8deg) translateY(12px); }
+.hand-card-wrapper:nth-child(2) { transform: rotate(-4deg) translateY(4px); }
+.hand-card-wrapper:nth-child(3) { transform: rotate(0deg) translateY(0); }
+.hand-card-wrapper:nth-child(4) { transform: rotate(4deg) translateY(4px); }
+.hand-card-wrapper:nth-child(5) { transform: rotate(8deg) translateY(12px); }
+
+.hand-card-wrapper:hover {
+  transform: rotate(0deg) translateY(-30px) !important;
+  z-index: 100;
+}
+
+.hand-card-wrapper + .hand-card-wrapper {
+  margin-left: -30px;
+}
+
+/* ═══════════════════════════════════════════════
+   CARD COMPONENT
+   ═══════════════════════════════════════════════ */
+.card {
+  width: 150px;
+  height: 222px;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+
+.card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* --- Card Front --- */
+.card-front {
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(139,119,75,0.05) 1px, transparent 3px),
+    repeating-linear-gradient(90deg, transparent, rgba(139,119,75,0.03) 2px, transparent 5px),
+    linear-gradient(160deg, #f0e6c8 0%, #e8dbb5 50%, #f0e6c8 100%);
+  border: 2.5px solid var(--gold-primary);
+  box-shadow:
+    inset 0 0 0 1px rgba(139,112,37,0.4),
+    inset 0 0 15px rgba(201,168,76,0.06),
+    0 4px 16px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Corner flourishes */
+.card-front::before, .card-front::after {
+  position: absolute;
+  font-size: 14px;
+  color: var(--gold-primary);
+  opacity: 0.4;
+  z-index: 5;
+  line-height: 1;
+}
+.card-front::before {
+  content: '❧';
+  top: 4px; left: 6px;
+}
+.card-front::after {
+  content: '❧';
+  bottom: 4px; right: 6px;
+  transform: rotate(180deg);
+}
+
+.card-art {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.card-art .piece-svg {
+  width: 70px;
+  height: 90px;
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Accent color wash behind piece */
+.card-art::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 3px;
+  opacity: 0.12;
+  z-index: 0;
+}
+
+.card-pawn .card-art::before { background: #5b9e8f; }
+.card-knight .card-art::before { background: #c44b28; }
+.card-bishop .card-art::before { background: #4a1a6b; }
+.card-rook .card-art::before { background: #b8860b; }
+.card-queen .card-art::before { background: #1a3a8a; }
+.card-king .card-art::before { background: #8b1a1a; }
+
+.card-name-banner {
+  background: linear-gradient(180deg, #2a2118 0%, #1a1410 100%);
+  padding: 5px 10px;
+  text-align: center;
+  position: relative;
+}
+
+.card-name-banner::before, .card-name-banner::after {
+  content: '';
+  position: absolute;
+  top: 0; height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+}
+.card-name-banner::before { top: 0; left: 0; }
+.card-name-banner::after { bottom: 0; left: 0; top: auto; }
+
+.card-name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.card-stats-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px 10px;
+  background: linear-gradient(180deg, rgba(62,39,35,0.15), transparent);
+}
+
+.card-stat {
+  text-align: center;
+}
+
+.card-stat-value {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.card-pawn .card-stat-value.atk { color: #5b9e8f; }
+.card-knight .card-stat-value.atk { color: #c44b28; }
+.card-bishop .card-stat-value.atk { color: #4a1a6b; }
+.card-rook .card-stat-value.atk { color: #b8860b; }
+.card-queen .card-stat-value.atk { color: #1a3a8a; }
+.card-king .card-stat-value.atk { color: #8b1a1a; }
+
+.card-stat-value.def { color: var(--gold-primary); }
+
+.card-stat-label {
+  font-family: var(--font-fell-sc);
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--rich-brown);
+  opacity: 0.6;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* --- Card Back --- */
+.card-back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+    linear-gradient(135deg, #2d3142 0%, #23273a 50%, #2d3142 100%);
+  border: 2.5px solid var(--gold-primary);
+  box-shadow:
+    inset 0 0 0 1px var(--gold-dark),
+    inset 0 0 20px rgba(0,0,0,0.3),
+    0 4px 16px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 3px;
+  opacity: 0.4;
+}
+
+.card-back-emblem {
+  width: 50px; height: 50px;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN 2: CARD INFO POPUP
+   ═══════════════════════════════════════════════ */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(10,8,5,0.85);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+.popup-overlay.visible { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popup-card {
+  width: 340px;
+  border-radius: 10px;
+  position: relative;
+  animation: slideUp 0.4s ease;
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(139,119,75,0.05) 1px, transparent 3px),
+    repeating-linear-gradient(90deg, transparent, rgba(139,119,75,0.04) 2px, transparent 5px),
+    linear-gradient(160deg, var(--gold-light) 0%, #ddb85c 50%, var(--gold-light) 100%);
+  border: 3px solid var(--gold-primary);
+  box-shadow:
+    inset 0 0 0 2px rgba(26,20,16,0.3),
+    inset 0 0 0 4px var(--gold-dark),
+    inset 0 0 30px rgba(201,168,76,0.1),
+    0 0 0 2px rgba(0,0,0,0.5),
+    0 0 0 5px var(--gold-dark),
+    0 20px 60px rgba(0,0,0,0.7),
+    0 0 80px rgba(201,168,76,0.1);
+  overflow: hidden;
+}
+
+.popup-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 30px; height: 30px;
+  background: rgba(62,39,35,0.6);
+  border: 1px solid var(--gold-dark);
+  border-radius: 50%;
+  color: var(--gold-light);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 5;
+  font-family: var(--font-body);
+}
+.popup-close:hover { background: rgba(139,26,26,0.6); }
+
+.popup-art-area {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.popup-art-area::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, rgba(241,200,109,0.8));
+}
+
+.popup-piece-svg {
+  width: 120px; height: 150px;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.popup-name-banner {
+  background: linear-gradient(180deg, #2a2118 0%, #1a1410 100%);
+  padding: 10px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.popup-name-banner::before, .popup-name-banner::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--gold-primary) 30%, var(--gold-bright) 50%, var(--gold-primary) 70%, transparent 95%);
+}
+.popup-name-banner::before { top: 0; }
+.popup-name-banner::after { bottom: 0; }
+
+.popup-card-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.popup-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 18px 20px 12px;
+}
+
+.popup-stat {
+  text-align: center;
+}
+
+.popup-stat-value {
+  font-family: var(--font-body);
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.popup-stat-value.atk { color: var(--crimson); }
+.popup-stat-value.def { color: var(--dark-green); }
+
+.popup-stat-label {
+  font-family: var(--font-fell-sc);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--rich-brown);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.popup-divider {
+  width: 70%;
+  margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), var(--gold-primary), var(--gold-dark), transparent);
+}
+
+.popup-ability {
+  padding: 14px 24px 22px;
+}
+
+.popup-ability-title {
+  font-family: var(--font-fell-sc);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--rich-brown);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.popup-ability-text {
+  font-family: var(--font-fell);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--rich-brown);
+  font-style: italic;
+  background: rgba(240,230,200,0.3);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border-left: 2px solid var(--gold-dark);
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN 3: STORYBOARD
+   ═══════════════════════════════════════════════ */
+.storyboard-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at center, rgba(62,39,35,0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #1a1410 0%, #211a12 50%, #1a1410 100%);
+  padding: 20px 40px;
+}
+
+.storyboard-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 8px;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+.storyboard-title::before, .storyboard-title::after {
+  content: '— ✦ —';
+  font-size: 12px;
+  letter-spacing: 4px;
+  opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.storyboard-title::before { right: calc(100% + 20px); }
+.storyboard-title::after { left: calc(100% + 20px); }
+
+.storyboard-scroll {
+  display: flex;
+  gap: 36px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 20px 40px;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-dark) transparent;
+}
+
+.storyboard-scroll::-webkit-scrollbar { height: 6px; }
+.storyboard-scroll::-webkit-scrollbar-track { background: transparent; }
+.storyboard-scroll::-webkit-scrollbar-thumb {
+  background: var(--gold-dark);
+  border-radius: 3px;
+}
+
+.story-frame {
+  flex-shrink: 0;
+  width: 340px;
+  scroll-snap-align: center;
+}
+
+.story-frame-inner {
+  border: 4px solid var(--gold-primary);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 0 2px var(--dark-bg),
+    inset 0 0 0 4px var(--gold-dark),
+    inset 0 0 0 6px var(--dark-bg),
+    inset 0 0 0 8px rgba(201,168,76,0.3),
+    0 0 0 2px var(--dark-bg),
+    0 0 0 4px var(--gold-dark),
+    0 8px 32px rgba(0,0,0,0.6);
+  overflow: hidden;
+  position: relative;
+}
+
+.story-art {
+  height: 160px;
+  background:
+    repeating-linear-gradient(0deg, transparent, rgba(139,119,75,0.06) 1px, transparent 3px),
+    repeating-linear-gradient(90deg, transparent, rgba(139,119,75,0.04) 2px, transparent 5px),
+    linear-gradient(160deg, #f0e6c8 0%, #e8dbb5 50%, #f0e6c8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  filter: sepia(0.15) saturate(1.1);
+}
+
+.story-art-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.story-art-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+  display: block;
+}
+
+.story-art-subtitle {
+  font-family: var(--font-fell);
+  font-size: 13px;
+  color: var(--rich-brown);
+  font-style: italic;
+  opacity: 0.6;
+  line-height: 1.5;
+}
+
+.story-caption {
+  background: linear-gradient(180deg, #1e1812 0%, #1a1410 100%);
+  padding: 12px 16px;
+  border-top: 1px solid var(--gold-dark);
+}
+
+.story-frame-number {
+  font-family: var(--font-fell-sc);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.story-caption-text {
+  font-family: var(--font-fell);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--parchment-mid);
+  font-style: italic;
+}
+
+/* Storyboard navigation */
+.storyboard-nav {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.story-nav-btn {
+  background: none;
+  border: 1px solid var(--gold-dark);
+  color: var(--gold-primary);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.story-nav-btn:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 15px rgba(201,168,76,0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN 4: CARD GALLERY (bonus)
+   ═══════════════════════════════════════════════ */
+.gallery-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at center, rgba(62,39,35,0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #1a1410 0%, #211a12 50%, #1a1410 100%);
+  gap: 32px;
+}
+
+.gallery-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 6px;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.gallery-subtitle {
+  font-family: var(--font-fell);
+  font-size: 13px;
+  color: var(--parchment-dark);
+  font-style: italic;
+  margin-top: -20px;
+  opacity: 0.6;
+}
+
+.gallery-grid {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════
+   UTILITY ANIMATIONS
+   ═══════════════════════════════════════════════ */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-bright) 50%, var(--gold-dark) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s ease infinite;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .battlefield { gap: 20px; }
+  .card-slot { width: 130px; height: 192px; }
+}
+
+@media (max-width: 900px) {
+  .top-bar { padding: 16px 24px 12px; }
+  .health-bar-outer { width: 180px; }
+  .bottom-area { padding: 0 24px 20px; }
+  .battlefield { gap: 12px; }
+  .card-slot { width: 110px; height: 163px; }
+  .hand-card-wrapper + .hand-card-wrapper { margin-left: -40px; }
+  .card { width: 120px; height: 178px; }
+  .card-name { font-size: 9px; letter-spacing: 2px; }
+  .card-stat-value { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAVIGATION ═══════ -->
+<nav class="nav-bar">
+  <span class="nav-title">Golden Chicken Nuggets</span>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-screen="board">Game Board</button>
+    <button class="nav-tab" data-screen="gallery">Card Gallery</button>
+    <button class="nav-tab" data-screen="storyboard">Storyboard</button>
+  </div>
+</nav>
+
+<!-- ═══════ SCREEN 1: GAME BOARD ═══════ -->
+<section class="screen active" id="screen-board">
+  <div class="game-board">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="player-info">
+        <span class="player-name">Player I</span>
+        <div class="health-bar-outer">
+          <div class="health-bar-fill" style="width:75%"></div>
+          <div class="health-bar-text">1500 / 2000</div>
+        </div>
+      </div>
+      <div class="player-info right">
+        <span class="player-name">Player II</span>
+        <div class="health-bar-outer">
+          <div class="health-bar-fill" style="width:90%"></div>
+          <div class="health-bar-text">1800 / 2000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="board-divider"></div>
+
+    <!-- Battlefield -->
+    <div class="battlefield">
+      <div class="card-slot">
+        <span class="slot-icon">⚔</span>
+        <span class="slot-label">Slot I</span>
+        <span class="slot-multiplier">×1</span>
+      </div>
+      <div class="card-slot">
+        <span class="slot-icon">⚔</span>
+        <span class="slot-label">Slot II</span>
+        <span class="slot-multiplier">×1</span>
+      </div>
+      <div class="card-slot">
+        <span class="slot-icon">⚔</span>
+        <span class="slot-label">Slot III</span>
+        <span class="slot-multiplier">×1</span>
+      </div>
+      <div class="card-slot">
+        <span class="slot-icon">⚔</span>
+        <span class="slot-label">Slot IV</span>
+        <span class="slot-multiplier">×1</span>
+      </div>
+    </div>
+
+    <!-- Bottom Area -->
+    <div class="bottom-area">
+      <!-- Deck -->
+      <div class="deck-area" id="deck">
+        <div class="deck-stack">
+          <div class="deck-card-shadow"></div>
+          <div class="deck-card-shadow"></div>
+          <div class="deck-top">
+            <svg class="deck-emblem" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 5L33 20L45 8L35 22L50 20L37 28L55 30L37 32L50 40L35 38L45 52L33 40L30 55L27 40L15 52L25 38L10 40L23 32L5 30L23 28L10 20L25 22L15 8L27 20L30 5Z" fill="#c9a84c" opacity="0.7"/>
+              <circle cx="30" cy="30" r="8" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <span class="deck-count">24 Cards</span>
+      </div>
+
+      <!-- Player Hand -->
+      <div class="player-hand" id="player-hand">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SCREEN 2: CARD GALLERY ═══════ -->
+<section class="screen gallery-screen" id="screen-gallery">
+  <h2 class="gallery-title gold-shimmer">The Royal Court</h2>
+  <p class="gallery-subtitle">Click any card to view its details</p>
+  <div class="gallery-grid" id="gallery-grid">
+    <!-- Cards injected by JS -->
+  </div>
+</section>
+
+<!-- ═══════ SCREEN 3: STORYBOARD ═══════ -->
+<section class="screen storyboard-screen" id="screen-storyboard">
+  <h2 class="storyboard-title">The Chronicle</h2>
+  <div class="storyboard-scroll" id="storyboard-scroll">
+    <div class="story-frame">
+      <div class="story-frame-inner">
+        <div class="story-art">
+          <div class="story-art-content">
+            <span class="story-art-icon">🏰</span>
+            <span class="story-art-subtitle">A kingdom built on golden foundations,<br>its people thriving in harmony...</span>
+          </div>
+        </div>
+        <div class="story-caption">
+          <div class="story-frame-number">Act I — The Golden Age</div>
+          <p class="story-caption-text">In the annual apple academy, a prosperous kingdom flourished under the reign of wise rulers. The chess pieces lived in peace, each knowing their role in the grand order.</p>
+        </div>
+      </div>
+    </div>
+    <div class="story-frame">
+      <div class="story-frame-inner">
+        <div class="story-art">
+          <div class="story-art-content">
+            <span class="story-art-icon">😔</span>
+            <span class="story-art-subtitle">Shadows crept across the land,<br>whispers of discontent grew louder...</span>
+          </div>
+        </div>
+        <div class="story-caption">
+          <div class="story-frame-number">Act II — The Gathering Storm</div>
+          <p class="story-caption-text">People look sad in the kingdom. A darkness began to spread from the eastern borders. The pawns murmured of strange happenings, and the knights sharpened their swords.</p>
+        </div>
+      </div>
+    </div>
+    <div class="story-frame">
+      <div class="story-frame-inner">
+        <div class="story-art">
+          <div class="story-art-content">
+            <span class="story-art-icon">⚔️</span>
+            <span class="story-art-subtitle">Steel met steel as the first<br>battles erupted across the realm...</span>
+          </div>
+        </div>
+        <div class="story-caption">
+          <div class="story-frame-number">Act III — The Clash</div>
+          <p class="story-caption-text">War came swiftly. The rival factions marshalled their forces — pawns on the front lines, bishops flanking, rooks holding the fortifications. Every piece had its purpose.</p>
+        </div>
+      </div>
+    </div>
+    <div class="story-frame">
+      <div class="story-frame-inner">
+        <div class="story-art">
+          <div class="story-art-content">
+            <span class="story-art-icon">👑</span>
+            <span class="story-art-subtitle">From the ashes of conflict,<br>a new strategy emerged...</span>
+          </div>
+        </div>
+        <div class="story-caption">
+          <div class="story-frame-number">Act IV — The Turning Tide</div>
+          <p class="story-caption-text">The Queen revealed her devastating power — life steal that turned the enemy's strength into her own. With this advantage, the tide of war began to shift.</p>
+        </div>
+      </div>
+    </div>
+    <div class="story-frame">
+      <div class="story-frame-inner">
+        <div class="story-art">
+          <div class="story-art-content">
+            <span class="story-art-icon">🏆</span>
+            <span class="story-art-subtitle">Victory forged in sacrifice,<br>a new order rises from the board...</span>
+          </div>
+        </div>
+        <div class="story-caption">
+          <div class="story-frame-number">Act V — The New Order</div>
+          <p class="story-caption-text">Through cunning strategy and the sacrifice of brave pawns, the kingdom was reunited. The golden chicken nuggets — sacred relics of power — were secured once more.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="storyboard-nav">
+    <button class="story-nav-btn" id="story-prev">◂</button>
+    <button class="story-nav-btn" id="story-next">▸</button>
+  </div>
+</section>
+
+<!-- ═══════ CARD INFO POPUP ═══════ -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-card">
+    <button class="popup-close" id="popup-close">✕</button>
+    <div class="popup-art-area" id="popup-art"></div>
+    <div class="popup-name-banner">
+      <div class="popup-card-name" id="popup-name">QUEEN</div>
+    </div>
+    <div class="popup-stats">
+      <div class="popup-stat">
+        <div class="popup-stat-value atk" id="popup-atk">25</div>
+        <div class="popup-stat-label">Attack</div>
+      </div>
+      <div class="popup-stat">
+        <div class="popup-stat-value def" id="popup-def">25</div>
+        <div class="popup-stat-label">Defense</div>
+      </div>
+    </div>
+    <div class="popup-divider"></div>
+    <div class="popup-ability">
+      <div class="popup-ability-title">Ability</div>
+      <div class="popup-ability-text" id="popup-ability">Life steal heals for a percentage of damage — 50%</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CARD DATA (from CardDatabase.gd)
+// ═══════════════════════════════════════════════
+const CARDS = {
+  Pawn:   { atk: 5,  def: 0,  ability: 'No abilities — the humble foot soldier of the realm.', accent: '#5b9e8f', cls: 'card-pawn' },
+  Knight: { atk: 10, def: 5,  ability: 'Galloping charge — leaps over obstacles to strike.', accent: '#c44b28', cls: 'card-knight' },
+  Bishop: { atk: 5,  def: 5,  ability: 'Divine protection — balanced in all aspects of war.', accent: '#4a1a6b', cls: 'card-bishop' },
+  Rook:   { atk: 0,  def: 10, ability: 'Fortification — an impenetrable stone guardian.', accent: '#b8860b', cls: 'card-rook' },
+  Queen:  { atk: 25, def: 25, ability: 'Life steal heals for a percentage of damage — 50%.', accent: '#1a3a8a', cls: 'card-queen' },
+  King:   { atk: 10, def: 25, ability: 'Royal decree — inspires nearby pieces with courage.', accent: '#8b1a1a', cls: 'card-king' }
+};
+
+// ═══════════════════════════════════════════════
+// CHESS PIECE SVG PATHS
+// ═══════════════════════════════════════════════
+const PIECE_SVGS = {
+  Pawn: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="22" r="14" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M28 36 Q40 42 52 36 L56 70 Q40 74 24 70 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="18" y="70" width="44" height="8" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="14" y="78" width="52" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <ellipse cx="40" cy="20" rx="5" ry="3" fill="rgba(255,255,255,0.08)"/>
+  </svg>`,
+  Knight: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M25 85 L25 55 Q25 35 35 25 L32 15 Q30 10 35 8 L42 12 Q50 8 52 15 L55 12 Q60 18 55 22 Q65 30 60 50 L58 55 L55 85 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <circle cx="42" cy="22" r="3" fill="#3e2723"/>
+    <path d="M35 30 Q40 28 45 30" stroke="#3e2723" stroke-width="1" fill="none"/>
+    <rect x="18" y="78" width="44" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M30 16 Q34 12 38 14" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+  </svg>`,
+  Bishop: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="10" r="5" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M32 15 Q40 18 48 15 L50 22 Q40 55 50 60 L48 65 Q40 62 32 65 L30 60 Q40 55 30 22 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M38 25 L42 25 M40 23 L40 27" stroke="#3e2723" stroke-width="1.5"/>
+    <ellipse cx="40" cy="45" rx="8" ry="12" fill="none" stroke="#3e2723" stroke-width="1" stroke-dasharray="2 2"/>
+    <rect x="26" y="65" width="28" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="20" y="71" width="40" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="16" y="77" width="48" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+  </svg>`,
+  Rook: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 18 L20 10 L28 10 L28 15 L34 15 L34 10 L46 10 L46 15 L52 15 L52 10 L60 10 L60 18 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="24" y="18" width="32" height="8" rx="1" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M28 26 L26 65 L54 65 L52 26 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="22" y="65" width="36" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="18" y="71" width="44" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="14" y="77" width="52" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <line x1="36" y1="30" x2="36" y2="60" stroke="#3e2723" stroke-width="1"/>
+    <line x1="44" y1="30" x2="44" y2="60" stroke="#3e2723" stroke-width="1"/>
+  </svg>`,
+  Queen: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="8" r="5" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M15 22 L22 55 L30 30 L40 50 L50 30 L58 55 L65 22" stroke="#1a1410" stroke-width="3" fill="none"/>
+    <path d="M15 22 L22 55 L30 30 L40 50 L50 30 L58 55 L65 22" fill="#1a1410" fill-opacity="0.3"/>
+    <circle cx="15" cy="20" r="3" fill="#1a1410" stroke="#3e2723" stroke-width="1"/>
+    <circle cx="30" cy="28" r="3" fill="#1a1410" stroke="#3e2723" stroke-width="1"/>
+    <circle cx="40" cy="14" r="2.5" fill="#1a1410" stroke="#3e2723" stroke-width="1"/>
+    <circle cx="50" cy="28" r="3" fill="#1a1410" stroke="#3e2723" stroke-width="1"/>
+    <circle cx="65" cy="20" r="3" fill="#1a1410" stroke="#3e2723" stroke-width="1"/>
+    <ellipse cx="40" cy="55" rx="20" ry="6" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M24 55 L22 70 L58 70 L56 55" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="18" y="70" width="44" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="14" y="76" width="52" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+  </svg>`,
+  King: `<svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="40" y1="2" x2="40" y2="16" stroke="#1a1410" stroke-width="3"/>
+    <line x1="34" y1="8" x2="46" y2="8" stroke="#1a1410" stroke-width="3"/>
+    <circle cx="40" cy="22" r="8" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M26 30 Q40 36 54 30 L58 55 Q40 62 22 55 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M32 38 L40 34 L48 38" stroke="#3e2723" stroke-width="1" fill="none"/>
+    <path d="M30 46 L40 42 L50 46" stroke="#3e2723" stroke-width="1" fill="none"/>
+    <rect x="22" y="55" width="36" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <path d="M20 61 Q40 68 60 61 L58 72 Q40 76 22 72 Z" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="16" y="72" width="48" height="6" rx="2" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="14" y="78" width="52" height="10" rx="3" fill="#1a1410" stroke="#3e2723" stroke-width="1.5"/>
+    <circle cx="40" cy="22" r="3" fill="none" stroke="#3e2723" stroke-width="1"/>
+  </svg>`
+};
+
+// ═══════════════════════════════════════════════
+// CREATE CARD HTML
+// ═══════════════════════════════════════════════
+function createCard(name) {
+  const data = CARDS[name];
+  return `
+    <div class="card ${data.cls}" data-card="${name}">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-art">
+            <div class="piece-svg">${PIECE_SVGS[name]}</div>
+          </div>
+          <div class="card-name-banner">
+            <div class="card-name">${name}</div>
+          </div>
+          <div class="card-stats-row">
+            <div class="card-stat">
+              <div class="card-stat-value atk">${data.atk}</div>
+              <div class="card-stat-label">Atk</div>
+            </div>
+            <div class="card-stat">
+              <div class="card-stat-value def">${data.def}</div>
+              <div class="card-stat-label">Def</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-back">
+          <svg class="card-back-emblem" viewBox="0 0 60 60" fill="none">
+            <path d="M30 5L33 20L45 8L35 22L50 20L37 28L55 30L37 32L50 40L35 38L45 52L33 40L30 55L27 40L15 52L25 38L10 40L23 32L5 30L23 28L10 20L25 22L15 8L27 20L30 5Z" fill="#c9a84c" opacity="0.6"/>
+            <circle cx="30" cy="30" r="8" stroke="#c9a84c" stroke-width="1.5" fill="none" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// INITIALIZE SCREENS
+// ═══════════════════════════════════════════════
+
+// Player Hand (5 cards)
+const handCards = ['Pawn', 'Knight', 'Bishop', 'Rook', 'Queen'];
+const handEl = document.getElementById('player-hand');
+handCards.forEach(name => {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'hand-card-wrapper';
+  wrapper.innerHTML = createCard(name);
+  handEl.appendChild(wrapper);
+});
+
+// Gallery (all 6 cards)
+const galleryEl = document.getElementById('gallery-grid');
+Object.keys(CARDS).forEach(name => {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = createCard(name);
+  galleryEl.appendChild(wrapper.firstElementChild);
+});
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+const tabs = document.querySelectorAll('.nav-tab');
+const screens = document.querySelectorAll('.screen');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    screens.forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('screen-' + tab.dataset.screen).classList.add('active');
+  });
+});
+
+// ═══════════════════════════════════════════════
+// CARD POPUP
+// ═══════════════════════════════════════════════
+const overlay = document.getElementById('popup-overlay');
+const popupName = document.getElementById('popup-name');
+const popupAtk = document.getElementById('popup-atk');
+const popupDef = document.getElementById('popup-def');
+const popupAbility = document.getElementById('popup-ability');
+const popupArt = document.getElementById('popup-art');
+
+function openPopup(cardName) {
+  const data = CARDS[cardName];
+  if (!data) return;
+  popupName.textContent = cardName.toUpperCase();
+  popupAtk.textContent = data.atk;
+  popupDef.textContent = data.def;
+  popupAbility.textContent = data.ability;
+  popupArt.innerHTML = `<div class="popup-piece-svg">${PIECE_SVGS[cardName]}</div>`;
+  popupArt.style.background = `radial-gradient(ellipse at center, ${data.accent}22 0%, transparent 70%), linear-gradient(160deg, var(--gold-light) 0%, #ddb85c 100%)`;
+  overlay.classList.add('visible');
+}
+
+function closePopup() {
+  overlay.classList.remove('visible');
+}
+
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.card');
+  if (card) {
+    e.stopPropagation();
+    openPopup(card.dataset.card);
+  }
+});
+
+document.getElementById('popup-close').addEventListener('click', closePopup);
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) closePopup();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePopup();
+});
+
+// ═══════════════════════════════════════════════
+// STORYBOARD NAVIGATION
+// ═══════════════════════════════════════════════
+const scroll = document.getElementById('storyboard-scroll');
+document.getElementById('story-prev').addEventListener('click', () => {
+  scroll.scrollBy({ left: -416, behavior: 'smooth' });
+});
+document.getElementById('story-next').addEventListener('click', () => {
+  scroll.scrollBy({ left: 416, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>

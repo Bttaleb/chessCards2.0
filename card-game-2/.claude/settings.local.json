@@ -6,7 +6,8 @@
       "Bash(echo:*)",
       "Bash(python3:*)",
       "Bash(done)",
-      "Bash(sips:*)"
+      "Bash(sips:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
