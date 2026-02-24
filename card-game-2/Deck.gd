@@ -29,7 +29,7 @@ func draw_card():
 	new_card.get_node("CardImage").texture = load(card_image_path)
 	new_card.get_node("Attack").text = str(card_database_reference.CARDS[card_drawn_name][0])
 	new_card.get_node("Health").text = str(card_database_reference.CARDS[card_drawn_name][1])
-
 	$"../CardManager".add_child(new_card)
 	new_card.name = "Card"
 	$"../PlayerHand".add_card_to_hand(new_card, CARD_DRAW_SPEED)
+	new_card.get_node("AnimationPlayer").play("card_flip")
