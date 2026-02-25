@@ -4,9 +4,46 @@
 [ext_resource type="PackedScene" uid="uid://07b6m3qq3pem" path="res://Scenes/CardSlot.tscn" id="3_r0du0"]
 [ext_resource type="Script" uid="uid://c08kp0tane32e" path="res://Script/CardSlot.gd" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://cwjwoun4ybmj7" path="res://Script/PlayerHand.gd" id="4_fos0i"]
-[ext_resource type="Script" uid="uid://nhcsvgmtaf88" path="res://Deck.gd" id="5_lgr22"]
 [ext_resource type="Texture2D" uid="uid://nxmubnxm8kx4" path="res://Assets/Deck.png" id="6_trn2v"]
 [ext_resource type="Script" uid="uid://bug8kf55h51xh" path="res://InputManager.gd" id="7_03owx"]
+
+[sub_resource type="GDScript" id="GDScript_3dxm6"]
+script/source = "extends Node2D
+
+const CARD_SCENE_PATH = \"res://Scenes/Card.tscn\"
+const CARD_DRAW_SPEED = 0.2
+
+var player_deck = [\"Pawn\", \"Knight\", \"Bishop\", \"Rook\", \"Queen\", \"King\"]
+var card_database_reference
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	player_deck.shuffle()
+	$RichTextLabel.text = str(player_deck.size())
+	card_database_reference = preload(\"res://Script/CardDatabase.gd\")
+
+
+func draw_card():
+	var card_drawn_name = player_deck[0]
+	player_deck.erase(card_drawn_name)
+	
+	if player_deck.size() == 0:
+		$Area2D/CollisionShape2D.disabled = true
+		$Sprite2D.visible = false
+		$RichTextLabel.visible = false
+		
+	$RichTextLabel.text = str(player_deck.size())
+	var card_scene = preload(CARD_SCENE_PATH)
+	var new_card = card_scene.instantiate()
+	var card_image_path = str(\"res://Assets/wholecards/\" + card_drawn_name + \"Card.png\")
+	new_card.get_node(\"CardImage\").texture = load(card_image_path)
+	new_card.get_node(\"Attack\").text = str(card_database_reference.CARDS[card_drawn_name][0])
+	new_card.get_node(\"Health\").text = str(card_database_reference.CARDS[card_drawn_name][1])
+	$\"../CardManager\".add_child(new_card)
+	new_card.name = \"Card\" 
+	$\"../PlayerHand\".add_card_to_hand(new_card, CARD_DRAW_SPEED)
+	new_card.get_node(\"AnimationPlayer\").play(\"card_flip\")
+"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cm0pq"]
 size = Vector2(179, 265)
@@ -16,23 +53,23 @@ size = Vector2(179, 265)
 [node name="CardManager" type="Node2D" parent="." unique_id=907913114]
 script = ExtResource("1_uu6xs")
 
-[node name="CardSlot" parent="." unique_id=1516655416 instance=ExtResource("3_r0du0")]
-position = Vector2(960, 750)
+[node name="CardSlot2" parent="." unique_id=1516655416 instance=ExtResource("3_r0du0")]
+position = Vector2(1088.0001, 560.00006)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("4_cm0pq")
 
-[node name="CardSlot2" parent="." unique_id=1871845794 instance=ExtResource("3_r0du0")]
-position = Vector2(760, 750)
+[node name="CardSlot1" parent="." unique_id=1871845794 instance=ExtResource("3_r0du0")]
+position = Vector2(848, 560)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("4_cm0pq")
 
-[node name="CardSlot3" parent="." unique_id=377655520 instance=ExtResource("3_r0du0")]
-position = Vector2(560, 750)
+[node name="CardSlot0" parent="." unique_id=377655520 instance=ExtResource("3_r0du0")]
+position = Vector2(608.00006, 560.00006)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("4_cm0pq")
 
-[node name="CardSlot4" parent="." unique_id=1097584559 instance=ExtResource("3_r0du0")]
-position = Vector2(1160, 750)
+[node name="CardSlot3" parent="." unique_id=1097584559 instance=ExtResource("3_r0du0")]
+position = Vector2(1330, 560)
 scale = Vector2(0.2, 0.2)
 script = ExtResource("4_cm0pq")
 
@@ -42,7 +79,7 @@ script = ExtResource("4_fos0i")
 [node name="Deck" type="Node2D" parent="." unique_id=386048449]
 position = Vector2(150, 890)
 scale = Vector2(0.8, 0.8)
-script = ExtResource("5_lgr22")
+script = SubResource("GDScript_3dxm6")
 
 [node name="Sprite2D" type="Sprite2D" parent="Deck" unique_id=467909445]
 z_index = -2
@@ -72,3 +109,10 @@ text = "0"
 
 [node name="InputManager" type="Node2D" parent="." unique_id=961840975]
 script = ExtResource("7_03owx")
+
+[node name="EndTurnButton" type="Button" parent="." unique_id=2097306419]
+offset_left = 300.0
+offset_top = 570.0
+offset_right = 378.0
+offset_bottom = 601.0
+text = "End Turn"

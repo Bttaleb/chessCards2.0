@@ -1,19 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://07b6m3qq3pem"]
+[gd_scene format=3 uid="uid://07b6m3qq3pem"]
 
 [ext_resource type="Texture2D" uid="uid://2wgvdrs81o7y" path="res://Assets/fwdslotsforp1vsp2/yellow_slot.png" id="1_5tl20"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mt86f"]
 size = Vector2(795, 1112)
 
-[node name="CardSlot" type="Node2D"]
+[node name="CardSlot" type="Node2D" unique_id=951662409]
 
-[node name="CardSlotImage" type="Sprite2D" parent="."]
+[node name="CardSlotImage" type="Sprite2D" parent="." unique_id=441273687]
 texture = ExtResource("1_5tl20")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 3
+[node name="Area2D" type="Area2D" parent="." unique_id=1955476812]
+collision_layer = 2
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1421474134]
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_mt86f")
