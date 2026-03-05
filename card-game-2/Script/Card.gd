@@ -10,14 +10,16 @@ func _ready() -> void:
 	#All cards must be a child of CardManager for the first time
 	get_parent().connect_card_signals(self)
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
 
 func _on_area_2d_mouse_entered() -> void:
 	emit_signal("hovered", self)
 
 func _on_area_2d_mouse_exited() -> void:
 	emit_signal("hovered_off", self)
+
+enum piece_type {
+	PAWN, KNIGHT, BISHOP, ROOK , QUEEN, KING
+}

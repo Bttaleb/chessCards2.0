@@ -23,6 +23,8 @@ func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
 	setup_hand()
 	
+#card_layout func (show one card with x(# of cards left))		
+	
 func setup_hand():
 	var card_scene = preload(CARD_SCENE_PATH)
 	
