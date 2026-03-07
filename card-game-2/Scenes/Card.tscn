@@ -201,6 +201,13 @@ offset_bottom = 251.0
 scale = Vector2(2, 2)
 text = "0"
 
+[node name="Count" type="RichTextLabel" parent="." unique_id=171913199]
+modulate = Color(0, 0, 0, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(2, 2)
+text = "0"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=197570319]
 libraries/ = SubResource("AnimationLibrary_kphy1")
 

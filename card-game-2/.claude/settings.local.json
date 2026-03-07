@@ -7,7 +7,9 @@
       "Bash(python3:*)",
       "Bash(done)",
       "Bash(sips:*)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "mcp__15b7fe6d-cc64-419b-bd11-0147b64a29c0__create_view",
+      "mcp__15b7fe6d-cc64-419b-bd11-0147b64a29c0__read_me"
     ]
   }
 }

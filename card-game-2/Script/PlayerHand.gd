@@ -4,17 +4,17 @@ const CARD_WIDTH = 300
 const HAND_Y_POSITION = 890
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
-const DECK_COMPOSITION = {
+
+var card_database_reference
+var player_hand = { 
+	#dictionary mapping for 1 node per key
 	"Pawn": 8,
 	"Knight": 2,
 	"Bishop": 2,
 	"Rook": 2,
 	"Queen": 1,
-	"King": 1
-}
-
-var card_database_reference
-var player_hand = []
+	"King": 1 } 
+var card_nodes = {}
 var center_screen_x
 
 # Called when the node enters the scene tree for the first time.
@@ -22,39 +22,42 @@ func _ready() -> void:
 	card_database_reference = preload("res://Script/CardDatabase.gd")
 	center_screen_x = get_viewport().size.x / 2
 	setup_hand()
-	
-#card_layout func (show one card with x(# of cards left))		
+			
 	
 func setup_hand():
 	var card_scene = preload(CARD_SCENE_PATH)
 	
-	for card_name in DECK_COMPOSITION:
-		for i in range(DECK_COMPOSITION[card_name]):
-			var new_card = card_scene.instantiate()
-			var card_image_path = str("res://Assets/wholecards/" + card_name + "Card.png")
-			new_card.get_node("CardImage").texture = load(card_image_path)
-			new_card.get_node("CardBackImage").visible = false
-			new_card.get_node("Attack").text = str(card_database_reference.CARDS[card_name][0])
-			new_card.get_node("Health").text = str(card_database_reference.CARDS[card_name][1])
-			$"../CardManager".add_child(new_card)
-			new_card.name = "Card" 
-			add_card_to_hand(new_card, 0)
+	for card_name in player_hand:
+		var new_card = card_scene.instantiate()
+		new_card.card_name = card_name
+		var card_image_path = str("res://Assets/wholecards/" + card_name + "Card.png")
+		new_card.get_node("CardImage").texture = load(card_image_path)
+		new_card.get_node("CardBackImage").visible = false
+		new_card.get_node("Attack").text = str(card_database_reference.CARDS[card_name][0])
+		new_card.get_node("Health").text = str(card_database_reference.CARDS[card_name][1])
+		new_card.get_node("Count").text = str(player_hand[card_name])
+		$"../CardManager".add_child(new_card)
+		card_nodes[card_name] = new_card
+		new_card.name = "Card" 
+		add_card_to_hand(new_card, 0)
 
 func add_card_to_hand(card, speed):
 	# Check if card is in hard or not
 	if card not in player_hand:
-		player_hand.insert(0, card)
+		player_hand[card.card_name] += 1
 		update_hand_positions(speed)
 		# Snap card back to hand if it isnt
 	else:
 		animate_card_to_position(card, card.hand_position, DEFAULT_CARD_MOVE_SPEED)
 		
 func update_hand_positions(speed):
-	for i in range(player_hand.size()):
+	var count = 0
+	for i in card_nodes:
 		# Get new card position based on index
-		var new_position = Vector2(calculate_card_position(i), HAND_Y_POSITION)
-		var card = player_hand[i]
+		var new_position = Vector2(calculate_card_position(count), HAND_Y_POSITION)
+		var card = card_nodes[i]
 		card.hand_position = new_position
+		count += 1
 		animate_card_to_position(card, new_position, speed)
 	
 func animate_card_to_position(card, new_position, speed):
@@ -71,6 +74,6 @@ func _process(delta: float) -> void:
 
 func remove_card_from_hand(card):
 	if card in player_hand:
-		player_hand.erase(card)
+		player_hand[card] -= 1
 		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
 	
