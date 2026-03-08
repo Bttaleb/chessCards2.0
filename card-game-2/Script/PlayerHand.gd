@@ -75,5 +75,18 @@ func _process(delta: float) -> void:
 func remove_card_from_hand(card):
 	if card in player_hand:
 		player_hand[card] -= 1
+		update_count(card)
 		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
-	
+
+# TODO(human): Implement update_count
+# This function receives a card_name (String, e.g. "Pawn")
+# It should:
+#   1. Update the Count text on the card node to reflect player_hand[card_name]
+#   2. If the count is 0, tint the card to look "depleted" (modulate with reduced alpha)
+#   3. If the count is > 0, ensure the card looks normal (full modulate)
+# Hints:
+#   - card_nodes[card_name] gets you the Card node
+#   - .get_node("Count").text sets the label
+#   - .modulate = Color(r, g, b, a) controls tinting
+func update_count(card_name: String):
+	pass
