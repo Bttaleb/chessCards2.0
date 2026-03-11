@@ -36,26 +36,26 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CardBackImage:scale")
+tracks/2/path = NodePath("CardBackImage:z_index")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(2.0058818, 1.7658856)]
+"values": [0]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("CardBackImage:z_index")
+tracks/3/path = NodePath("CardBackImage:scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
+"update": 0,
+"values": [Vector2(2.0058818, 1.7658856)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -112,26 +112,26 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CardBackImage:scale")
+tracks/2/path = NodePath("CardBackImage:z_index")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.10009728, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.10009728),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(2.0058818, 1.7658856), Vector2(0.1, 1.766), Vector2(2.023, 1.766)]
+"values": [0, -1]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("CardBackImage:z_index")
+tracks/3/path = NodePath("CardBackImage:scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.10009728),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [0, -1]
+"times": PackedFloat32Array(0, 0.10009728, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(2.0058818, 1.7658856), Vector2(0.1, 1.766), Vector2(2.023, 1.766)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -180,7 +180,7 @@ texture = ExtResource("1_dd2wi")
 [node name="Area2D" type="Area2D" parent="." unique_id=1458318699]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1860595347]
-position = Vector2(-1, 0)
+position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_hael8")
 
 [node name="Attack" type="RichTextLabel" parent="." unique_id=870216031]
@@ -202,9 +202,10 @@ scale = Vector2(2, 2)
 text = "0"
 
 [node name="Count" type="RichTextLabel" parent="." unique_id=171913199]
-modulate = Color(0, 0, 0, 0)
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -9.0
+offset_top = -296.0
+offset_right = 31.0
+offset_bottom = -256.0
 scale = Vector2(2, 2)
 text = "0"
 

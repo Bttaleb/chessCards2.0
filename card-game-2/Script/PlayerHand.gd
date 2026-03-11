@@ -37,19 +37,18 @@ func setup_hand():
 		new_card.get_node("Health").text = str(card_database_reference.CARDS[card_name][1])
 		new_card.get_node("Count").text = str(player_hand[card_name])
 		$"../CardManager".add_child(new_card)
-		card_nodes[card_name] = new_card
 		new_card.name = "Card" 
-		add_card_to_hand(new_card, 0)
+		$"../PlayerHand".add_card_to_hand(new_card, 0)
 
 func add_card_to_hand(card, speed):
-	# Check if card is in hard or not
-	if card not in player_hand:
-		player_hand[card.card_name] += 1
-		update_hand_positions(speed)
-		# Snap card back to hand if it isnt
+	# Check if we already have the card
+	if card.card_name in card_nodes:
+		# if so, animate cards to hand
+		animate_card_to_position(card, card.hand_position, speed)
 	else:
-		animate_card_to_position(card, card.hand_position, DEFAULT_CARD_MOVE_SPEED)
-		
+		card_nodes[card.card_name] = card
+		update_hand_positions(speed)
+			
 func update_hand_positions(speed):
 	var count = 0
 	for i in card_nodes:
@@ -73,20 +72,18 @@ func _process(delta: float) -> void:
 	pass
 
 func remove_card_from_hand(card):
-	if card in player_hand:
-		player_hand[card] -= 1
-		update_count(card)
+	if card.card_name in player_hand:
+		player_hand[card.card_name] -= 1
+		update_count(card.card_name)
 		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
 
-# TODO(human): Implement update_count
-# This function receives a card_name (String, e.g. "Pawn")
-# It should:
-#   1. Update the Count text on the card node to reflect player_hand[card_name]
-#   2. If the count is 0, tint the card to look "depleted" (modulate with reduced alpha)
-#   3. If the count is > 0, ensure the card looks normal (full modulate)
-# Hints:
-#   - card_nodes[card_name] gets you the Card node
-#   - .get_node("Count").text sets the label
-#   - .modulate = Color(r, g, b, a) controls tinting
 func update_count(card_name: String):
-	pass
+	var count = 0
+	var card = card_nodes[card_name] # get card node
+	count = player_hand[card_name]  # read number from data dictionary
+	card.get_node("Count").text = str(count) # convert number to text and set
+	if count == 0:
+		card.modulate = Color(0.4, 0.4, 0.4, 0.6)
+	else:
+		card.modulate = Color(1, 1, 1, 1)
+	

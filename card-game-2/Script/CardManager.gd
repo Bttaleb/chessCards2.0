@@ -12,6 +12,7 @@ var card_being_dragged
 var is_hovering_on_card
 var player_hand_reference
 var isFlip
+var original_card
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -23,24 +24,46 @@ func _process(delta: float) -> void:
 		var mouse_pos = get_global_mouse_position()
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), 
 		clamp(mouse_pos.y, 0, screen_size.y))
+		
+func animate_card_to_position_with_queue_free(card, new_position, speed):
+	var tween = get_tree().create_tween()
+	tween.tween_property(card, "position", new_position, speed)
+	tween.tween_callback(card.queue_free)
 
+	
 func start_drag(card):
-	card_being_dragged = card
-	card.scale = Vector2(DEFAULT_CARD_SCALE, DEFAULT_CARD_SCALE)
+	original_card = card
+	var clone = create_card_clone(card)
+	clone.position = card.position
+	clone.scale = Vector2(DEFAULT_CARD_SCALE, DEFAULT_CARD_SCALE)
+	clone.z_index = 2
+	add_child(clone)
+	card_being_dragged = clone
 	
 func finish_drag():
 	card_being_dragged.scale = Vector2(CARD_BIGGER_SCALE, CARD_BIGGER_SCALE)
 	var card_slot_found = raycast_check_for_card_slot()
 	if card_slot_found and not card_slot_found.card_in_slot:
-		player_hand_reference.remove_card_from_hand(card_being_dragged)
-	#Card dropped in empty card slot
 		card_being_dragged.position = card_slot_found.position
 		card_being_dragged.scale = Vector2(DEFAULT_CARD_SCALE, DEFAULT_CARD_SCALE)
 		card_being_dragged.get_node("Area2D/CollisionShape2D").disabled = true
 		card_slot_found.card_in_slot = true
+		player_hand_reference.remove_card_from_hand(original_card)
 	else:
-		player_hand_reference.add_card_to_hand(card_being_dragged, DEFAULT_CARD_MOVE_SPEED)
+		animate_card_to_position_with_queue_free(card_being_dragged, original_card.position, DEFAULT_CARD_MOVE_SPEED)
+	original_card = null
 	card_being_dragged = null
+
+func create_card_clone(original):
+	var clone = preload("res://Scenes/Card.tscn").instantiate()
+	clone.card_name = original.card_name
+	clone.get_node("CardImage").texture = original.get_node("CardImage").texture
+	clone.get_node("CardBackImage").visible = false
+	clone.get_node("Attack").text = original.get_node("Attack").text
+	clone.get_node("Health").text = original.get_node("Health").text
+	clone.get_node("Count").visible = false
+	return clone
+	
 
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
